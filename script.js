@@ -1,6 +1,6 @@
 'use strict';
 
-import L from './leaflet';
+// import L from './leaflet';
 // import 'leaflet/dist/leaflet.css';
 
 // prettier-ignore
@@ -27,21 +27,56 @@ if (navigator.geolocation) {
       console.log(
         `https://www.google.com/maps/@${latitude},${longitude},11.97z`
       );
+
+      const coords = [latitude, longitude];
+
+      // THis L is leaflet namespace
+      const map = L.map('map').setView(coords, 13);
+      console.log(map);
+
+      // Using Google map
+      L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }).addTo(map);
+
+      // L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+      //   maxZoom: 20,
+      //   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      // }).addTo(mappoint, );
+
+      // googleStreets.addTo(map);
+
+      map.on(`click`, function (mapEvent) {
+        const { lat, lng } = mapEvent.latlng;
+        const point = [lat, lng];
+        // console.log(mapEvent)
+        L.marker(point, {
+          riseOnHover: true,
+          // draggable	: true
+        })
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 250,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: `running-popup`,
+            })
+          )
+          .setPopupContent(`WorkOut`)
+          .openPopup();
+      });
     },
     function () {
       alert(`Could not get your position`);
     }
   );
-  // THis L is leaflet namespace
-  const map = L.map('map').setView([51.505, -0.09], 13);
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
-
-  L.marker([51.5, -0.09])
-    .addTo(map)
-    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-    .openPopup();
 }
+/**icon: L.icon({
+        iconUrl: 'my-icon.png',
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76]
+    }), */
