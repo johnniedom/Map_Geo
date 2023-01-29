@@ -16,14 +16,15 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 // console.log(navigator.geolocation);
 
-let map, mapEvent;
+// let map, mapEvent;
 
 class App {
   #map;
   #mapEvent;
 
   constructor() {
-    this._getPosition;
+     console.log(this);
+    this._getPosition();
   }
 
   _getPosition() {
@@ -40,22 +41,24 @@ class App {
   }
 
   _loadMap(position) {
-    // console.log(position);
+    console.log(position);
     const { latitude } = position.coords;
     const { longitude } = position.coords;
     console.log(`https://www.google.com/maps/@${latitude},${longitude},11.97z`);
+
 
     const coords = [latitude, longitude];
 
     // THis L is leaflet namespace
     this.#map = L.map('map').setView(coords, 13);
     console.log(this.#map);
+    console.log(this)
 
     // Using Google map
     L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
       maxZoom: 20,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }).addTo(thi.#map);
+    }).addTo(this.#map);
 
     // L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
     //   maxZoom: 20,
@@ -74,9 +77,9 @@ class App {
   _toggleElevation() {}
 }
 
-const app = new App();
-
-app._getPosition;
+const appCreate = new App();
+console.log(appCreate);
+// app._getPosition;
 
 form.addEventListener(`submit`, function (e) {
   e.preventDefault();
