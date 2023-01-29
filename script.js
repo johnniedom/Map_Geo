@@ -6,6 +6,13 @@
 // prettier-ignore
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+// map Type
+const street = document.getElementById('streets')
+const hybird = document.getElementById('hybrid')
+const terrain = document.getElementById('terrain')
+
+
+
 const form = document.querySelector('.form');
 const containerWorkouts = document.querySelector('.workouts');
 const inputType = document.querySelector('.form__input--type');
@@ -23,7 +30,7 @@ class App {
   #mapEvent;
 
   constructor() {
-     console.log(this);
+    //  console.log(this);
     this._getPosition();
   }
 
@@ -55,20 +62,32 @@ class App {
     console.log(this)
 
     // Using Google map
-    L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }).addTo(this.#map);
+//     L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
+//       maxZoom: 20,
+//       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+//     }).addTo(this.#map);
 
-    // L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
-    //   maxZoom: 20,
-    //   subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    // }).addTo(map);
+//     L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+//     maxZoom: 20,
+//     subdomains:['mt0','mt1','mt2','mt3']
+// }).addTo(this.#map)
+
+  //   L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+  //     maxZoom: 20,
+  //     subdomains:['mt0','mt1','mt2','mt3']
+  // }).addTo(this.#map)
 
     this.#map.on(`click`, function (mapE) {
       thi.#mapEvent = mapE;
       form.classList.remove('hidden');
       inputDistance.focus();
+    });
+  }
+
+  mapType(lyrs) {
+    return L.tileLayer(`http://{s}.google.com/vt/lyrs=${lyrs}&x={x}&y={y}&z={z}`, {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     });
   }
 
