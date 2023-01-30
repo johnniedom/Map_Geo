@@ -21,7 +21,7 @@
     />
 
     <script
-      defer       
+      defer
       src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
       integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
       crossorigin=""
@@ -34,17 +34,18 @@
     <div id="map"></div>
 
     <div class="sidebar">
-      <div  class="map__change">
-        <button id="streets" class="btn_map btn__streets">
+      <div class="map__change">
+      
+        <button id="streets" class="btn_map btn__streets" data-map="m">
           streets
-      </button>
-      <button id="hybrid" class="btn_map btn__hybrid">
-        hybrid
-      </button>
-      <button id="terrain" class="btn_map btn__terrain">
-        terrain
-      </button>
-    </div>
+        </button>
+        <button id="hybrid" class="btn_map btn__hybrid" data-map="s,h">
+          hybrid
+        </button>
+        <button id="terrain" class="btn_map btn__terrain" data-map="p">
+          terrain
+        </button>
+      </div>
       <img src="MapLoca.png" alt="Logo" class="logo" />
 
       <ul class="workouts">

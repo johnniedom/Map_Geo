@@ -7,9 +7,10 @@
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // map Type
-const street = document.getElementById('streets')
-const hybird = document.getElementById('hybrid')
-const terrain = document.getElementById('terrain')
+// const mapBtn = document.querySelector(`.map__change`)
+// const street = document.getElementById('streets')
+// const hybird = document.getElementById('hybrid')
+// const terrain = document.getElementById('terrain')
 
 
 
@@ -28,10 +29,15 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class App {
   #map;
   #mapEvent;
+  #mapType;
 
   constructor() {
     //  console.log(this);
+    // this.lyrs = lyrs;
     this._getPosition();
+    this._setupMapBtn();
+    this.mapBtn = document.querySelector(`.map__change`);
+    console.log(this, this._setupMapBtn());
   }
 
   _getPosition() {
@@ -58,37 +64,30 @@ class App {
 
     // THis L is leaflet namespace
     this.#map = L.map('map').setView(coords, 13);
-    console.log(this.#map);
-    console.log(this)
 
     // Using Google map
-//     L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
-//       maxZoom: 20,
-//       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-//     }).addTo(this.#map);
-
-//     L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-//     maxZoom: 20,
-//     subdomains:['mt0','mt1','mt2','mt3']
-// }).addTo(this.#map)
-
-  //   L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-  //     maxZoom: 20,
-  //     subdomains:['mt0','mt1','mt2','mt3']
-  // }).addTo(this.#map)
+    L.tileLayer(`http://{s}.google.com/vt/lyrs=${this.#mapType}&x={x}&y={y}&z={z}`, {
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    }).addTo(this.#map);
 
     this.#map.on(`click`, function (mapE) {
-      thi.#mapEvent = mapE;
+      this.#mapEvent = mapE;
+      // console.log(mapE);
       form.classList.remove('hidden');
       inputDistance.focus();
     });
+
   }
 
-  mapType(lyrs) {
-    return L.tileLayer(`http://{s}.google.com/vt/lyrs=${lyrs}&x={x}&y={y}&z={z}`, {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    });
+  _setupMapBtn(){
+   this.mapBtn.childNodes.forEach(function(el) {
+    if (el.classList && el.classList.contains(`btn_map`)) {
+      el.addEventListener(`click`, function(e){
+        this.#mapType = e.target.dataset.map
+      }.bind(this))
+    }
+  });
   }
 
   _showForm() {}
@@ -96,9 +95,52 @@ class App {
   _toggleElevation() {}
 }
 
-const appCreate = new App();
-console.log(appCreate);
-// app._getPosition;
+/*
+Hybrid: s,h;
+Satellite: s;
+Streets: m;
+Terrain: p;
+*/
+const app = new App()
+
+// street.addEventListener(`click`, function(e){
+// //   const mainBtn = e.target.closest('.map__change')
+// //  console.log(e);
+// //  console.log( mainBtn);
+// //  const bnts = mainBtn.querySelectorAll(`.btn_map`)
+
+//  console.log(e.target.dataset.map);
+//  const mapType = e.target.dataset.map
+//  new App(mapType)
+// })
+
+console.log(mapBtn);
+// console.log(mapBtn.childNodes);
+// mapBtn.childNodes.forEach(el => {
+//   if( el.classList.contains(`btn_map`))
+//     console.log(el);
+//   });
+
+
+        // new App(mapType);
+
+// mapBtn.addEventListener(`click`, function(){
+//  console.log();
+// })
+
+// mapBtn.childNodes.forEach(el => {
+//   if (el.classList && el.classList.contains(`btn_map`)) {
+//     el.addEventListener(`click`, function(e){
+//       const mapType = e.target.dataset.map
+//       new App(mapType);
+//       el.classList.add(`hidden`)
+//     })
+//   }
+// })
+
+
+// console.log(app);
+
 
 form.addEventListener(`submit`, function (e) {
   e.preventDefault();
