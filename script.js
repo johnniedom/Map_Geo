@@ -5,9 +5,6 @@
 // import L from './leaflet';
 // import 'leaflet/dist/leaflet.css';
 
-// prettier-ignore
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
 // map Type
 // const mapBtn = document.querySelector(`.map__change`)
 // const street = document.getElementById('streets')
@@ -29,20 +26,30 @@ const mapBtn = document.querySelector(`.map__change`);
 
 class WorkOut {
   date = new Date();
-  id = (new Date() + '').slice(-10);
+  id = (Date.now() + '').slice(-10);
 
   constructor(coords, distance, duration) {
     this.coords = coords; // [7.9, 8.4]
     this.distance = distance;
     this.duration = duration;
   }
-}
 
+  _setDescription() {
+    // prettier-ignore
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
+      months[this.date.getMonth()]
+    }  ${months[this.date.getDate()]}}`;
+  }
+}
+console.log(Date.now() + '');
 class Running extends WorkOut {
+  type = `running`;
   constructor(coords, distance, duration, Cadence) {
     super(coords, distance, duration);
     this.Cadence = Cadence;
     this.calPace();
+    this._setDescription();
   }
 
   calPace() {
@@ -51,10 +58,12 @@ class Running extends WorkOut {
 }
 
 class Cycling extends WorkOut {
+  type = `cycling`;
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
     this.elevationGain = elevationGain;
     this.calSpeed();
+    this._setDescription();
   }
   calSpeed() {
     this.speed = this.distance / (this.duration / 60);
@@ -159,7 +168,7 @@ class App {
     e.preventDefault();
 
     const validInput = (...input) => input.every(inp => Number.isFinite(inp));
-    const allPositive = (...inputs) => input.every(inp => inp > 0);
+    const allPositive = (...inputs) => inputs.every(inp => inp > 0);
     // Get data from form
     const type = inputType.value;
     const distance = +inputDistance.value;
@@ -181,6 +190,8 @@ class App {
       ) {
         return alert(`Input Has to be a Number`);
       }
+
+      workout = new Running([lat, lng], distance, duration, cadence);
     }
     //if workout cycling, create cycle object
     if (type === `cycling`) {
@@ -192,14 +203,27 @@ class App {
       ) {
         return alert(`Input Has to be a Number`);
       }
-      workout = new Running([lat, lng], 50, 20, 50);
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     // Add new object to workout array
+    this.#workout.push(workout);
+    console.log(workout);
 
     // Render workout on Map as marker
+    this.renderWorkOutMaker(workout);
 
-    const point = [lat, lng];
-    // console.log(mapEvent)
+    // Render workOut on list
+    this._renderWorkout(workout);
+    //Clear input and Hide form
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+  }
+
+  renderWorkOutMaker(workout) {
+    const point = workout.coords;
     L.marker(point, {
       riseOnHover: true,
       // draggable	: true
@@ -211,53 +235,69 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: `running-popup`,
+          className: `${workout.type}-popup`,
         })
       )
-      .setPopupContent(`WorkOut`)
+      .setPopupContent(`workout distance`)
       .openPopup();
+  }
 
-    //Clear input and Hide form
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        '';
+  _renderWorkout(workout) {
+    let html = `
+      <li class="workout workout--${workout.type}" data-id=${workout.id}>
+        <h2 class="workout__title"> ${workout.description}</h2>
+        <div class="workout__details">
+          <span class="workout__icon">  ${
+            workout.type === `running` ? `🏃‍♂️` : `🚴‍♀️`
+          } </span>
+          <span class="workout__value">5.2</span>
+          <span class="workout__unit">km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⏱</span>
+          <span class="workout__value">${workout.distance}</span>
+          <span class="workout__unit">min</span>
+     </div>`;
+
+     if (workout.type === `running`) {
+      html += `
+       <div class="workout__details">
+          <span class="workout__icon">⚡️</span>
+          <span class="workout__value">${workout.speed.toFixed(1)}</span>
+          <span class="workout__unit">min/km</span>
+       </div>
+        <div class="workout__details">
+            <span class="workout__icon">🦶🏼</span>
+            <span class="workout__value">${workout.elevation}</span>
+            <span class="workout__unit">spm</span>
+        </div>  
+      </li>
+   `;
+      //  ${workout.speed.toFixed(1)}
+    }
+
+    if (workout.type === `cycling`) {
+      html += `  
+      <div class="workout__details">
+      <span class="workout__icon">⚡️</span>
+      <span class="workout__value">${workout.speed.toFixed(1)}</span>
+      <span class="workout__unit">km/h</span>
+    </div>
+    <div class="workout__details">
+      <span class="workout__icon">⛰</span>
+      <span class="workout__value">>${workout.elevation}</span>
+      <span class="workout__unit">m</span>
+    </div>
+    </li>
+     `;
+
+     form.insertAdjacentHTML('afterend', html)
+    } 
   }
 }
 
-/*
-Hybrid: s,h;
-Satellite: s;
-Streets: m;
-Terrain: p;
-*/
 const app = new App();
 console.log(app);
-// console.log(app._loadMap);
-// street.addEventListener(`click`, function(e){
-// //   const mainBtn = e.target.closest('.map__change')
-// //  console.log(e);
-// //  console.log( mainBtn);
-// //  const bnts = mainBtn.querySelectorAll(`.btn_map`)
-
-//  console.log(e.target.dataset.map);
-//  const mapType = e.target.dataset.map
-//  new App(mapType)
-// })
-
-console.log(mapBtn);
-// console.log(mapBtn.childNodes);
-// mapBtn.childNodes.forEach(el => {
-//   if( el.classList.contains(`btn_map`))
-//     console.log(el);
-//   });
-
-// new App(mapType);
-
-// mapBtn.addEventListener(`click`, function(){
-//  console.log();
-// })
 
 // mapBtn.childNodes.forEach(el => {
 //   if (el.classList && el.classList.contains(`btn_map`)) {
@@ -270,3 +310,6 @@ console.log(mapBtn);
 // })
 
 // console.log(app);
+const now = new Date();
+console.log(now);
+console.log(now.getMonth());
