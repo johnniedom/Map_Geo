@@ -345,7 +345,7 @@ class App {
 
   _getLocalStorage() {
     // Converting it back to Object
-    // this will not get access to the prortotype chain.
+    // this will not get access to the prototype chain.
     const data = JSON.parse(localStorage.getItem(`workouts`));
 
     this.#workout = data;
@@ -355,8 +355,15 @@ class App {
      this._renderWorkout(work)
     })
   }
+  render(){
+    console.log(workout);
+    localStorage.removeItem(workout)
+    location.reload()
+  }
+
 }
 
 const app = new App();
 console.log(app);
+console.log(app.render());
 
