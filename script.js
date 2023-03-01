@@ -83,7 +83,7 @@ class App {
     this._getPosition();
 
     // STORE DATA
-   this._getLocalStorage()
+    this._getLocalStorage();
 
     form.addEventListener(`submit`, this._newWorkout.bind(this));
     inputType.addEventListener(`change`, this._toggleElevation);
@@ -92,19 +92,12 @@ class App {
 
   _mapTarget(e) {
     e.preventDefault();
-
     console.log(mapBtn, this);
     mapBtn.childNodes.forEach(el => {
       if (el.classList && el.classList.contains(`btn_map`)) {
         el.addEventListener(`click`, this._changeMap.bind(this));
       }
     });
-    // console.log(this._mapTarget.bind(this));
-    //   this.childNodes.forEach(el => {
-    //   if (el.classList && el.classList.contains(`btn_map`)) {
-    //     // el.addEventListener(`click`, this._mapTarget.bind(this));
-    //   }
-    // });
   }
 
   _changeMap(e) {
@@ -132,7 +125,7 @@ class App {
     const { latitude } = position.coords;
     const { longitude } = position.coords;
     console.log(`https://www.google.com/maps/@${latitude},${longitude},11.97z`);
-    console.log(this);
+    console.log(this.mapType);
 
     const coords = [latitude, longitude];
 
@@ -152,8 +145,8 @@ class App {
     this.#map.on(`click`, this._showForm.bind(this));
 
     this.#workout.forEach(work => {
-      this.renderWorkOutMaker(work)
-     })
+      this.renderWorkOutMaker(work);
+    });
   }
 
   _showForm(mapE) {
@@ -237,8 +230,6 @@ class App {
 
     // ste Local storage ti all workout
     this._setLocalStorage();
-
-    
   }
 
   renderWorkOutMaker(workout) {
@@ -352,18 +343,16 @@ class App {
 
     console.log(this.#workout);
     this.#workout.forEach(work => {
-     this._renderWorkout(work)
-    })
+      this._renderWorkout(work);
+    });
   }
-  render(){
+  render() {
     console.log(workout);
-    localStorage.removeItem(workout)
-    location.reload()
+    localStorage.removeItem(workout);
+    location.reload();
   }
-
 }
 
 const app = new App();
 console.log(app);
 console.log(app.render());
-
